@@ -34,7 +34,7 @@ type Trie struct {
 	isEnd    bool
 }
 
-func Constructor() Trie {
+func Constructor1() Trie {
 	return Trie{
 		children: make(map[string]*Trie),
 		isEnd:    false,
