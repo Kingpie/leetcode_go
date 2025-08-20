@@ -24,7 +24,7 @@ Input: list1 = [], list2 = [0]
 Output: [0]
 */
 
-func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+func mergeTwoLists1(list1 *ListNode, list2 *ListNode) *ListNode {
 	dummy := &ListNode{}
 	cur := dummy
 	for list1 != nil && list2 != nil {

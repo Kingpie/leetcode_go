@@ -1,7 +1,5 @@
 package leetcode_go
 
-import "container/heap"
-
 /*
 给定一个链表数组，每个链表都已经按升序排列。
 
@@ -31,32 +29,41 @@ import "container/heap"
 输出：[]
 */
 
-type hp []*ListNode
+func merge(list []*ListNode, start int, end int) *ListNode {
+	if start >= end {
+		return list[start]
+	}
+	mid := start + (end-start)/2
+	return mergeTwoLists(merge(list, start, mid), merge(list, mid+1, end))
+}
 
-func (h hp) Len() int           { return len(h) }
-func (h hp) Less(i, j int) bool { return h[i].Val < h[j].Val }
-func (h hp) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-func (h *hp) Push(v any)        { *h = append(*h, v.(*ListNode)) }
-func (h *hp) Pop() any          { a := *h; v := a[len(a)-1]; *h = a[:len(a)-1]; return v }
-
-func mergeKLists(lists []*ListNode) *ListNode {
-	h := hp{}
-	heap.Init(&h)
-	for i, list := range lists {
-		if list != nil {
-			heap.Push(&h, lists[i])
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+	dummy := &ListNode{}
+	cur := dummy
+	for list1 != nil && list2 != nil {
+		if list1.Val < list2.Val {
+			cur.Next = list1
+			list1 = list1.Next
+		} else {
+			cur.Next = list2
+			list2 = list2.Next
 		}
+		cur = cur.Next
 	}
 
-	dummy := &ListNode{}
-	pre := dummy
-	for h.Len() > 0 {
-		node := heap.Pop(&h).(*ListNode)
-		pre.Next = node
-		pre = pre.Next
-		if node.Next != nil {
-			heap.Push(&h, node.Next)
-		}
+	if list1 != nil {
+		cur.Next = list1
+	}
+	if list2 != nil {
+		cur.Next = list2
 	}
 	return dummy.Next
+}
+
+func mergeKLists(lists []*ListNode) *ListNode {
+	m := len(lists)
+	if m == 0 {
+		return nil
+	}
+	return merge(lists, 0, m-1)
 }
